@@ -14,8 +14,8 @@ public class Main {
 
         taskList.get(0).complete();
 
-        for(Task e : taskList){
-            System.out.println(e);
+        for(Task task : taskList){
+            System.out.println(task);
         }
 
     }
