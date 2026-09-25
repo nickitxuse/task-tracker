@@ -1,17 +1,22 @@
 package com.practice;
+import java.util.ArrayList;
 
 
 
 public class Main {
     public static void main(String[] args) {
         
-        Task first = new Task(1,"Изучить Git");
-        Task second = new Task(2,"Создать первый класс");
+        ArrayList<Task> taskList = new ArrayList<>();
 
-        second.complete();
+        taskList.add(new Task(1, "Закончить настройку GitHub"));
+        taskList.add(new Task(2, "Провести тесты программы"));
+        taskList.add(new Task(3, "Помыться"));
 
-        System.out.println(first);
-        System.out.println(second);
+        taskList.get(0).complete();
+
+        for(Task e : taskList){
+            System.out.println(e);
+        }
 
     }
 }
