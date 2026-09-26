@@ -29,4 +29,8 @@ public class Task {
             return id + ". "  + title + " [ ]";
         }
     }
+
+    public int getId(){
+        return this.id;
+    }
 }
