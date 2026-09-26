@@ -25,37 +25,76 @@ public class Main {
         boolean running = true;
         
         while(running == true){
-            System.out.println("Меню: \n 1 - Список задач.\n 2 - Добавить задачу. \n 3 - Завершить задачу. \n 0 - Закрыть. \n " );
+            System.out.println("Меню: \n 1 - Список задач.\n 2 - Добавить задачу. \n 3 - Завершить задачу. \n 4 - Удалить задачу. \n 0 - Закрыть. \n " );
 
             String command = scanner.nextLine();
 
             switch(command){
+                case("4"):
+                    showTasks(taskList);
+                    System.out.println("Введите id задачи: ");
+                    String removeId = scanner.nextLine();
+
+                    try{
+                        int taskId = Integer.parseInt(removeId);
+
+                        boolean found = false;
+                        System.out.println("\n");
+
+                        for(int i = 0; i < taskList.size() ; i++){
+                            if(taskId == taskList.get(i).getId()){
+                                found = true;
+                                taskList.remove(i);
+                                break;
+                            }
+                        }
+                        if(found == true){
+                            System.out.println("Задача удалена.\n");
+                        }
+                        else{
+                            System.out.println("Задача не найдена.\n");
+                        }
+                    }
+
+                    catch(NumberFormatException e){
+                        System.out.println("Ошибка! Введите целое число.\n");
+                    }
+
+                    break;
                 case("3"):
                     showTasks(taskList);
                     System.out.println("Введите id задачи: ");
-                    String id = scanner.nextLine();
-                    Integer idInteger = Integer.parseInt(id);
-                    boolean found = false;
-                    System.out.println("\n");
+                    String completeId = scanner.nextLine();
 
-                    for(Task task : taskList){
-                        if(idInteger == task.getId()){ 
-                            found = true;
-                            task.complete();
-                            break;
+                    try{
+                        int taskID = Integer.parseInt(completeId);
+                    
+                        boolean found = false;
+                        System.out.println("\n");
+
+                        for(Task task : taskList){
+                            if(taskID == task.getId()){ 
+                                found = true;
+                                task.complete();
+                                break;
+                            }
+                        }
+                   
+                    
+                        if(found == true){
+                            System.out.println("Задача помечена как выполненная.\n");
+                        }
+                            
+                        else{
+                            System.out.println("Задача не найдена.\n");
                         }
                     }
-                    
-                    if(found == true){
-                        System.out.println("Задача помечена как выполненная.\n");
-                        break;
+                        
+                    catch(NumberFormatException e){
+                        System.out.println("Ошибка! Введите целое число.\n");
                     }
-                    else{
-                            System.out.println("Некорректное id\n");
-                            break;
-                            }
-                    
-                    
+                
+                    break;
 
                 case("2"):
                     System.out.println("Название задачи: ");
