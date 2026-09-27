@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 
+
 public class Main {
 
     public static void showTasks(ArrayList<Task> taskList){
@@ -17,27 +18,17 @@ public class Main {
 
     }
 
-    public static void completeTask(ArrayList<Task> taskList , Scanner scanner){
-        showTasks(taskList);
+    public static void completeTask(TaskManager taskManager , Scanner scanner){
+
+        showTasks(taskManager.getTasks());
         System.out.println("Введите id задачи: ");
         String completeId = scanner.nextLine();
 
         try{
             int taskID = Integer.parseInt(completeId);
-        
-            boolean found = false;
             System.out.println("\n");
 
-            for(Task task : taskList){
-                if(taskID == task.getId()){ 
-                    found = true;
-                    task.complete();
-                    break;
-                }
-            }
-        
-        
-            if(found == true){
+            if(taskManager.completeTask(taskID)){
                 System.out.println("Задача помечена как выполненная.\n");
             }
                 
@@ -51,25 +42,16 @@ public class Main {
         }
     }
 
-    public static void deleteTask(ArrayList<Task> taskList , Scanner scanner){
-        showTasks(taskList);
+    public static void deleteTask(TaskManager taskManager , Scanner scanner){
+        showTasks(taskManager.getTasks());
         System.out.println("Введите id задачи: ");
         String removeId = scanner.nextLine();
 
         try{
             int taskId = Integer.parseInt(removeId);
-
-            boolean found = false;
             System.out.println("\n");
 
-            for(int i = 0; i < taskList.size() ; i++){
-                if(taskId == taskList.get(i).getId()){
-                    found = true;
-                    taskList.remove(i);
-                    break;
-                }
-            }
-            if(found == true){
+            if(taskManager.deleteTask(taskId)){
                 System.out.println("Задача удалена.\n");
             }
             else{
@@ -82,26 +64,22 @@ public class Main {
         }
     }
 
-    public static boolean addTask(ArrayList<Task> taskList, Scanner scanner , int idCounter){
+    public static void addTask(TaskManager taskManager, Scanner scanner){ 
         System.out.println("Название задачи: ");
         String title = scanner.nextLine();
-        if(title.isBlank()){
+        if(taskManager.addTask(title) == false){
             System.out.println("Ошибка! Вы ввели пустое значение.\n");
-            return false;
         }
         else{
             System.out.println("\n");
-            taskList.add(new Task(idCounter, title));
             System.out.println("Задача добавлена! \n");
-            return true;
         }
     }
     public static void main(String[] args) {
         
-        ArrayList<Task> taskList = new ArrayList<>();
-
+        
+        TaskManager taskManager = new TaskManager();
         Scanner scanner = new Scanner(System.in);
-        int idCounter = 1;
         boolean running = true;
         
         while(running == true){
@@ -112,23 +90,21 @@ public class Main {
             switch(command){
                 case("4"):
                 
-                    deleteTask(taskList, scanner);
+                    deleteTask(taskManager, scanner);
                     break;
                     
                 case("3"):
 
-                    completeTask(taskList, scanner);
+                    completeTask(taskManager, scanner);
                     break;
 
                 case("2"):
                     
-                    if(addTask(taskList, scanner, idCounter)){
-                        idCounter++;
-                    }
+                    addTask(taskManager, scanner);
                     break;
 
                 case("1"):
-                    showTasks(taskList);
+                    showTasks(taskManager.getTasks());
                     System.out.println("\n");
                     break;
 
