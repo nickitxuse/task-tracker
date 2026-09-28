@@ -19,7 +19,7 @@ public class DatabaseConnectionCheck {
         TaskRepository taskRepository = new TaskRepository(url, user, password);
 
         try{
-
+            taskRepository.addTask("Rukoblud sanina");
             ArrayList<Task> taskList = taskRepository.loadTasks();
             for(Task task : taskList){
                 System.out.println(task);

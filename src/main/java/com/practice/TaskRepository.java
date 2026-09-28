@@ -20,6 +20,17 @@ public class TaskRepository {
 
     }
 
+    public void addTask(String title) throws SQLException{
+        try(    Connection connection = DriverManager.getConnection(url,user,password);
+                PreparedStatement statement = connection.prepareStatement("INSERT INTO tasks (title) VALUES (?);");
+            ){
+
+                statement.setString(1,title);
+                statement.executeUpdate();
+
+            }
+    }
+
     public ArrayList<Task> loadTasks() throws SQLException{
 
         try(    Connection connection = DriverManager.getConnection(url,user,password);
