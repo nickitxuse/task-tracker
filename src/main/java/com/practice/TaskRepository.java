@@ -20,6 +20,22 @@ public class TaskRepository {
 
     }
 
+    public boolean completeTask(int id) throws SQLException{
+        try(Connection connection = DriverManager.getConnection(url,user,password);
+            PreparedStatement statement = connection.prepareStatement("UPDATE tasks SET completed = TRUE WHERE id = ?;")) {
+                
+                statement.setInt(1,id);
+                int result = statement.executeUpdate();
+
+                if(result > 0){
+                    return true;
+                }
+                return false;
+
+            }
+        
+    }
+
     public void addTask(String title) throws SQLException{
         try(    Connection connection = DriverManager.getConnection(url,user,password);
                 PreparedStatement statement = connection.prepareStatement("INSERT INTO tasks (title) VALUES (?);");
@@ -27,6 +43,21 @@ public class TaskRepository {
 
                 statement.setString(1,title);
                 statement.executeUpdate();
+
+            }
+    }
+
+    public boolean deleteTask(int id)throws SQLException{
+        try(Connection connection = DriverManager.getConnection(url,user,password);
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM tasks WHERE id = ?;")) {
+                
+                statement.setInt(1,id);
+                int result = statement.executeUpdate();
+
+                if(result > 0){
+                    return true;
+                }
+                return false;
 
             }
     }
