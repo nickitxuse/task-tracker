@@ -1,40 +1,10 @@
 package com.practice;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class DatabaseConnectionCheck {
 
-    public static ArrayList<Task> loadTasks(String url , String user , String password) throws SQLException{
 
-            try(    Connection connection = DriverManager.getConnection(url,user,password);
-                    PreparedStatement statement = connection.prepareStatement("SELECT id,title,completed FROM tasks;");
-                    ResultSet result = statement.executeQuery(); ) {
-
-                        
-                ArrayList<Task> tempArray = new ArrayList<>();
-
-                while(result.next()){
-
-                    int id = result.getInt("id");
-                    String title = result.getString("title");
-                    boolean completed = result.getBoolean("completed");
-                    Task newTask = new Task(id, title);
-
-                    if(completed){
-                        newTask.complete();
-                    }
-
-                    tempArray.add(newTask);}
-                
-                return tempArray;
-                }
-        
-    }
-    
 
     public static void main(String[] args){
         String url = System.getenv("DB_URL");
@@ -46,9 +16,11 @@ public class DatabaseConnectionCheck {
             return;
         }
 
+        TaskRepository taskRepository = new TaskRepository(url, user, password);
+
         try{
 
-            ArrayList<Task> taskList = loadTasks(url, user, password);
+            ArrayList<Task> taskList = taskRepository.loadTasks();
             for(Task task : taskList){
                 System.out.println(task);
             }
