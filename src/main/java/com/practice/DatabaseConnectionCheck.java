@@ -4,9 +4,37 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
+import java.util.ArrayList;
 
 public class DatabaseConnectionCheck {
+
+    public static ArrayList<Task> loadTasks(String url , String user , String password) throws SQLException{
+
+            try(    Connection connection = DriverManager.getConnection(url,user,password);
+                    PreparedStatement statement = connection.prepareStatement("SELECT id,title,completed FROM tasks;");
+                    ResultSet result = statement.executeQuery(); ) {
+
+                        
+                ArrayList<Task> tempArray = new ArrayList<>();
+
+                while(result.next()){
+
+                    int id = result.getInt("id");
+                    String title = result.getString("title");
+                    boolean completed = result.getBoolean("completed");
+                    Task newTask = new Task(id, title);
+
+                    if(completed){
+                        newTask.complete();
+                    }
+
+                    tempArray.add(newTask);}
+                
+                return tempArray;
+                }
+        
+    }
+    
 
     public static void main(String[] args){
         String url = System.getenv("DB_URL");
@@ -14,28 +42,23 @@ public class DatabaseConnectionCheck {
         String password = System.getenv("DB_PASSWORD");
 
         if(url == null || url.isBlank() || user == null || user.isBlank() || password == null){
-            System.out.println("Данные подключения к базе данных некорректны. Строка пуста.");
+            System.out.println("Сбой в полученных данных для ДБ.");
+            return;
         }
-        else{
-            System.out.println("Данные для подключения к ДБ получены.");
 
-            try(Connection connection = DriverManager.getConnection(url,user,password);
-                PreparedStatement statement = connection.prepareStatement("SELECT id,title,completed FROM tasks;");
-                ResultSet result = statement.executeQuery();) {
+        try{
 
-                System.out.println("Соединение установлено.");
-
-                while(result.next()){
-                    System.out.println(result.getInt("id"));
-                    System.out.println(result.getString("title"));
-                    System.out.println(result.getBoolean("completed"));
-                    
-                }
+            ArrayList<Task> taskList = loadTasks(url, user, password);
+            for(Task task : taskList){
+                System.out.println(task);
             }
-            catch(SQLException e){
-                System.out.println("Ошибка при работе с базой данных. " + e.getMessage());
-            }
+        }catch(SQLException e){
+            System.out.println("Ошибка: " + e.getMessage());
         }
+
     }
+
+        
+
 
 }
