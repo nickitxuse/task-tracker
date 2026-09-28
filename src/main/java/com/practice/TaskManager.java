@@ -1,46 +1,34 @@
 package com.practice;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class TaskManager {
-    private ArrayList<Task> taskList = new ArrayList<>();
-    private int idCounter = 1;
+    private TaskRepository taskRepository;
 
-    public boolean addTask(String title){
+    public TaskManager(TaskRepository taskRepository){
+        this.taskRepository = taskRepository;
+    }
+
+    public boolean addTask(String title)throws SQLException{
         if(title.isBlank()){
             return false;
         }
         else{
-            taskList.add(new Task(idCounter, title));
-            idCounter++;
+            taskRepository.addTask(title);
             return true;
         }
     }
 
-    public ArrayList<Task> getTasks(){
-        ArrayList<Task> copyList = new ArrayList<>(taskList);
-        return copyList;
+    public ArrayList<Task> getTasks()throws SQLException{
+        return taskRepository.loadTasks();
     }
 
-    public boolean completeTask(int id){
-        for(Task task : taskList){
-            if(task.getId() == id){
-                task.complete();
-                return true;
-            }
-        }
-        return false;
+    public boolean completeTask(int id)throws SQLException{
+        return taskRepository.completeTask(id);
     }
 
-    public boolean deleteTask(int id){
-        for(int i = 0; i < taskList.size() ; i++){
-            if(taskList.get(i).getId() == id){
-                taskList.remove(i);
-                return true;
-            }
-        }
-        return false;
+    public boolean deleteTask(int id)throws SQLException{
+        return taskRepository.deleteTask(id);
     }
-
-}
-
+}   

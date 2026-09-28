@@ -1,4 +1,5 @@
 package com.practice;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -18,7 +19,7 @@ public class Main {
 
     }
 
-    public static void completeTask(TaskManager taskManager , Scanner scanner){
+    public static void completeTask(TaskManager taskManager , Scanner scanner)throws SQLException{
 
         showTasks(taskManager.getTasks());
         System.out.println("Введите id задачи: ");
@@ -42,7 +43,7 @@ public class Main {
         }
     }
 
-    public static void deleteTask(TaskManager taskManager , Scanner scanner){
+    public static void deleteTask(TaskManager taskManager , Scanner scanner)throws SQLException{
         showTasks(taskManager.getTasks());
         System.out.println("Введите id задачи: ");
         String removeId = scanner.nextLine();
@@ -64,7 +65,7 @@ public class Main {
         }
     }
 
-    public static void addTask(TaskManager taskManager, Scanner scanner){ 
+    public static void addTask(TaskManager taskManager, Scanner scanner)throws SQLException{ 
         System.out.println("Название задачи: ");
         String title = scanner.nextLine();
         if(taskManager.addTask(title) == false){
@@ -77,8 +78,16 @@ public class Main {
     }
     public static void main(String[] args) {
         
-        
-        TaskManager taskManager = new TaskManager();
+        String url = System.getenv("DB_URL");
+        String user = System.getenv("DB_USER");
+        String password = System.getenv("DB_PASSWORD");
+
+        if(url == null || url.isBlank() || user == null || user.isBlank() || password == null){
+            System.out.println("Сбой в полученных данных для ДБ.");
+            return;
+        }
+        TaskRepository taskRepository = new TaskRepository(url, user, password);
+        TaskManager taskManager = new TaskManager(taskRepository);
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
         
@@ -86,7 +95,7 @@ public class Main {
             System.out.println("Меню: \n 1 - Список задач.\n 2 - Добавить задачу. \n 3 - Завершить задачу. \n 4 - Удалить задачу. \n 0 - Закрыть. \n " );
 
             String command = scanner.nextLine();
-
+            try{
             switch(command){
                 case("4"):
                 
@@ -114,6 +123,8 @@ public class Main {
 
                 default:
                     System.out.println("Неверная комманда.\n");
+            }}catch(SQLException e){
+                System.out.println("Ошибка: " + e.getMessage());
             }       
 
         }        
