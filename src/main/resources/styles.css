@@ -1,0 +1,70 @@
+.title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #182230;
+}
+.root{
+    -fx-background-color: #F4F6FA;
+    -fx-font-size: 14px;
+}
+.add-button{
+    -fx-background-color: #356AE6;
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-padding: 10px 18px;
+}
+.add-button:hover{
+    -fx-background-color: #2854B8;
+}
+.text-field{
+    -fx-background-color:white;
+    -fx-background-radius: 8px;
+    -fx-border-color: #CBD5E1;
+    -fx-border-radius: 8px;
+    -fx-padding: 10px 12px;
+    -fx-text-fill: #182230;
+    -fx-prompt-text-fill: #64748B;
+}
+.text-field:focused{
+    -fx-border-color:#356AE6;
+}
+.list-view{
+    -fx-background-color:white;
+    -fx-border-color:#CBD5E1;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-padding: 4px;
+}
+.list-cell{
+    -fx-background-color:white;
+    -fx-text-fill: #182230;
+    -fx-padding: 10px 12px;
+}
+.list-cell:filled:hover{
+    -fx-background-color: #F1F5F9;
+}
+.list-cell:filled:selected{
+    -fx-background-color: #DBEAFE;
+    -fx-text-fill: #1E3A8A;
+}
+.remove-button{
+    -fx-background-color: #FEE2E2;
+    -fx-text-fill: #991B1B;
+    -fx-background-radius: 8px;
+    -fx-padding: 10px 18px;
+}
+.remove-button:hover{
+    -fx-background-color: #FECACA;
+}
+.finish-button{
+    -fx-background-color: #DCFCE7;
+    -fx-text-fill: #166534;
+    -fx-background-radius: 8px;
+    -fx-padding: 10px 18px;
+}
+.finish-button:hover{
+    -fx-background-color: #BBF7D0;
+}
+.button:disabled{
+    -fx-opacity: 0.5;
+}

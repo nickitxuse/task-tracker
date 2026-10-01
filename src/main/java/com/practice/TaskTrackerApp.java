@@ -4,13 +4,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.Scene;
-
 import java.sql.SQLException;
-
 import javafx.geometry.Insets;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.Priority;
 
 public class TaskTrackerApp extends javafx.application.Application {
     @Override 
@@ -25,35 +24,42 @@ public class TaskTrackerApp extends javafx.application.Application {
         String password = System.getenv("DB_PASSWORD");
 
         HBox addButtonHBox = new HBox();
-        addButtonHBox.setSpacing(10.0);
         TextField textField = new TextField();
-        textField.setPromptText("Название задачи");
         Label inputLabel = new Label();
         Button addButton = new Button("Добавить");
         ListView<Task> taskListView = new ListView<>();
         HBox removeAndFinishHBOX = new HBox();
-        removeAndFinishHBOX.setSpacing(15.0);
         Button finishButton = new Button("Завершить");
         Button removeButton = new Button("Удалить");
-
+        Label label = new Label("TASK TRACKER");
+        VBox vBox = new VBox();    
+        
+        addButtonHBox.setSpacing(10.0);
+        textField.setPromptText("Название задачи");
+        addButtonHBox.setHgrow(textField, Priority.ALWAYS);
+        removeAndFinishHBOX.setSpacing(15.0);
         addButtonHBox.getChildren().add(textField);
         addButtonHBox.getChildren().add(addButton);
-
         removeAndFinishHBOX.getChildren().add(removeButton);
         removeAndFinishHBOX.getChildren().add(finishButton);
-
-        Label label = new Label("TASK TRACKER");
-        label.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
-        VBox vBox = new VBox();
         vBox.getChildren().add(label);
         vBox.getChildren().add(addButtonHBox);
         vBox.getChildren().add(inputLabel);
         vBox.getChildren().add(taskListView);
         vBox.getChildren().add(removeAndFinishHBOX);
-        Scene scene = new Scene(vBox);
-
+        vBox.setVgrow(taskListView, Priority.ALWAYS);
         vBox.setPadding(new Insets(20.0));
         vBox.setSpacing(12);
+        inputLabel.setWrapText(true);
+        
+        label.getStyleClass().add("title");
+        addButton.getStyleClass().add("add-button");
+        removeButton.getStyleClass().add("remove-button");
+        finishButton.getStyleClass().add("finish-button");
+   
+        Scene scene = new Scene(vBox);
+        String fileURL = getClass().getResource("/styles.css").toExternalForm();
+        scene.getStylesheets().add(fileURL);
 
         if(url == null || url.isBlank() || user == null || user.isBlank() || password == null){
             inputLabel.setText("Сбой в полученных данных для ДБ.");
@@ -64,6 +70,9 @@ public class TaskTrackerApp extends javafx.application.Application {
         else{
             TaskRepository taskRepository = new TaskRepository(url, user, password);
             TaskManager taskManager = new TaskManager(taskRepository);
+
+            removeButton.disableProperty().bind(taskListView.getSelectionModel().selectedItemProperty().isNull());
+            finishButton.disableProperty().bind(taskListView.getSelectionModel().selectedItemProperty().isNull());
 
             removeButton.setOnAction(event -> {
                     Task selectedTask = taskListView.getSelectionModel().getSelectedItem();
