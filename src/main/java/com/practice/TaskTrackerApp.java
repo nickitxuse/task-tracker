@@ -27,6 +27,7 @@ public class TaskTrackerApp extends javafx.application.Application {
         Label inputLabel = new Label();
         Button addButton = new Button("Добавить");
         ListView<Task> taskListView = new ListView<>();
+        taskListView.setCellFactory(list -> new TaskCell());
         HBox removeAndFinishHBOX = new HBox();
         Button finishButton = new Button("Завершить");
         Button removeButton = new Button("Удалить");

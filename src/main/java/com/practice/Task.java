@@ -19,6 +19,18 @@ public class Task {
 
     }
 
+    public String getTitle(){
+
+        return this.title;
+
+    }
+
+    public boolean isCompleted(){
+
+        return this.completed;
+
+    }
+
     @Override
     public String toString(){
 

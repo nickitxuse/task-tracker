@@ -81,3 +81,23 @@
     -fx-text-fill: #64748B;
     -fx-font-size: 14px;
 }
+.task-status{
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 4px 8px;
+}
+.task-title{
+    -fx-font-size: 14px;
+    -fx-text-fill: #182230;
+}
+.status-done{
+    -fx-background-color: #DCFCE7;
+    -fx-text-fill: #166534;
+}
+.status-pending{
+    -fx-background-color: #E2E8F0;
+    -fx-text-fill: #334155;
+}
+.task-status{
+    -fx-background-radius: 6px;
+}
