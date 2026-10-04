@@ -18,7 +18,6 @@ public class TaskTrackerApp extends javafx.application.Application {
         stage.setWidth(600.0);
         stage.setHeight(400.0);
 
-
         String url = System.getenv("DB_URL");
         String user = System.getenv("DB_USER");
         String password = System.getenv("DB_PASSWORD");
@@ -33,7 +32,8 @@ public class TaskTrackerApp extends javafx.application.Application {
         Button removeButton = new Button("Удалить");
         Label label = new Label("TASK TRACKER");
         VBox vBox = new VBox();    
-        
+        Label noTasks = new Label("Задач пока нет. Добавьте первую задачу выше.");
+
         addButtonHBox.setSpacing(10.0);
         textField.setPromptText("Название задачи");
         addButtonHBox.setHgrow(textField, Priority.ALWAYS);
@@ -51,11 +51,14 @@ public class TaskTrackerApp extends javafx.application.Application {
         vBox.setPadding(new Insets(20.0));
         vBox.setSpacing(12);
         inputLabel.setWrapText(true);
+        noTasks.setWrapText(true);
+        taskListView.setPlaceholder(noTasks);
         
         label.getStyleClass().add("title");
         addButton.getStyleClass().add("add-button");
         removeButton.getStyleClass().add("remove-button");
         finishButton.getStyleClass().add("finish-button");
+        noTasks.getStyleClass().add("empty-message");
    
         Scene scene = new Scene(vBox);
         String fileURL = getClass().getResource("/styles.css").toExternalForm();
@@ -63,6 +66,7 @@ public class TaskTrackerApp extends javafx.application.Application {
 
         if(url == null || url.isBlank() || user == null || user.isBlank() || password == null){
             inputLabel.setText("Сбой в полученных данных для ДБ.");
+            noTasks.setText("Настройте подключение к базе данных.");
             addButton.setDisable(true);
             finishButton.setDisable(true);
             removeButton.setDisable(true);
@@ -87,7 +91,8 @@ public class TaskTrackerApp extends javafx.application.Application {
                                 inputLabel.setText("Задача удалена!");
 
                                 try{
-                                taskListView.getItems().setAll(taskManager.getTasks());}
+                                    refreshTasks(taskManager, taskListView, noTasks);}
+                                
                                 catch(SQLException e){inputLabel.setText("Задача удалена, но список не удалось обновить.");}      
                                                           
                             }
@@ -114,7 +119,8 @@ public class TaskTrackerApp extends javafx.application.Application {
                             inputLabel.setText("Задача помечена как выполненная.");
 
                             try{
-                            taskListView.getItems().setAll(taskManager.getTasks());}
+                                refreshTasks(taskManager, taskListView, noTasks);}
+                            
                             catch(SQLException e){inputLabel.setText("Задача завершена, но список не удалось обновить.");}
                         }
 
@@ -138,7 +144,8 @@ public class TaskTrackerApp extends javafx.application.Application {
                                 textField.clear();
                                 inputLabel.setText("Задача добавлена");
                                 try{
-                                taskListView.getItems().setAll(taskManager.getTasks());}
+                                    refreshTasks(taskManager, taskListView, noTasks);}
+
                                 catch(SQLException e){inputLabel.setText("Задача добавлена, но список не удалось обновить.");}
                             }
                             else{
@@ -151,8 +158,9 @@ public class TaskTrackerApp extends javafx.application.Application {
                 });
 
             try{
-                taskListView.getItems().setAll(taskManager.getTasks()) ;
+                refreshTasks(taskManager, taskListView, noTasks);
             }catch(SQLException e){
+                noTasks.setText("Не удалось загрузить задачи.");
                 inputLabel.setText("Ошибка! " + e.getMessage());
             }
         }
@@ -163,6 +171,12 @@ public class TaskTrackerApp extends javafx.application.Application {
 
 
         stage.show();
+    }
+
+    public void refreshTasks(TaskManager taskManager , ListView<Task> taskList , Label noTasks) throws SQLException{
+            taskList.getItems().setAll(taskManager.getTasks()) ;
+            noTasks.setText("Задач пока нет. Добавьте первую задачу выше.");
+
     }
 
     public static void main(String[] args){
